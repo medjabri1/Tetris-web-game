@@ -1,0 +1,118 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  min-height: max-content;
+}
+
+.pop-up {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #eb2525CC;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.pop-up.active {
+  display: flex;
+}
+.pop-up .content {
+  width: 300px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #eee;
+  border-radius: 40px;
+  box-shadow: 0px 0px 4px #12123433, 0px 0px 13px #12123433;
+}
+.pop-up .content img {
+  height: 60px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: transform 100ms ease-in-out, box-shadow 200ms ease-in-out;
+  padding: 5px;
+  border-radius: 50%;
+  box-shadow: 0px 0px 2px #eb252533, 0px 0px 5px #eb252533, 0px 0px 10px #eb252533, 0px 0px 20px #eb252533;
+}
+.pop-up .content img:hover {
+  transform: scale(1.2);
+}
+.pop-up .content span {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #eb2525;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  background: #eee;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.container .title {
+  font-size: 1.3rem;
+  color: #121234;
+  margin: 5px;
+  letter-spacing: 1px;
+  word-spacing: 4px;
+  text-transform: uppercase;
+}
+.container .title.lost {
+  color: #eb2525;
+}
+.container .score {
+  font-size: 1.2rem;
+  color: #121234;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+.container .score.highScore {
+  font-size: 1.6rem;
+  color: #8715c9;
+  font-weight: 600;
+}
+.container .grid {
+  margin-top: 30px;
+  height: 600px;
+  width: 300px;
+  box-shadow: 0px 0px 2px #12123433, 0px 0px 15px #12123433;
+  padding: 10px;
+  display: grid;
+  grid-gap: 2px;
+  grid-template-columns: repeat(10, auto);
+  grid-template-rows: repeat(20, auto);
+}
+.container .grid div {
+  background-color: #ffffff66;
+  box-shadow: inset 0px 0px 4px #eee;
+}
+.container .grid div.blue {
+  background-color: #121234;
+}
+.container .grid div.red {
+  background-color: #eb2525;
+}
+.container .grid div.green {
+  background-color: #006d00;
+}
+.container .grid div.orange {
+  background-color: #ff5100;
+}
+
+/*# sourceMappingURL=index.css.map */
