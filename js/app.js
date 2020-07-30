@@ -91,22 +91,37 @@ function control(e) {
 
     if(e.keyCode == 13) {
         //Enter key
-        startGame();
+        if(!isPlaying || isGameOver) {
+            startGame();
+        }
+    }
+
+    if(e.keyCode == 32) {
+        //Space bar key
+        if(isPlaying) {
+            rotateShape();
+        }
     }
 
     if(e.keyCode == 37) {
         //Left key
-        moveDirection(-1);
+        if(isPlaying) {
+            moveDirection(-1);
+        }
     }
     
     if(e.keyCode == 39) {
         //Right key
-        moveDirection(1);
+        if(isPlaying) {
+            moveDirection(1);
+        }
     }
     
     if(e.keyCode == 40) {
         //Bottom key
-        moveDown();
+        if(isPlaying) {
+            moveDown();
+        }
     }
 }
 
@@ -121,7 +136,7 @@ function moveDirection(direction) {
     if(direction == -1 && validMove) {
         currentShape.forEach(element => {
             if((element) % columnsNbr == 0) validMove = false;
-            if(blocks[element] != null) {
+            if(blocks[element - 1] != null) {
                 if(blocks[element - 1].classList.contains('stopped')) validMove = false;
             }
         });
@@ -192,6 +207,100 @@ function moveDown() {
     
 }
 
+//Rotate shape 
+
+function rotateShape() {
+
+    let validMove = true;
+    let moveIndexes = null;
+
+    if(currentShape == null) validMove = false;
+
+    if(validMove) {
+
+        //Horizontal I Shape
+        if((currentShape[3] == currentShape[2] + 1) && ((currentShape[2] == currentShape[1] + 1)) && (currentShape[1] == currentShape[0] + 1))
+            moveIndexes = [
+                currentShape[0],
+                currentShape[0] + columnsNbr,
+                currentShape[0] + columnsNbr * 2,
+                currentShape[0] + columnsNbr * 3,
+            ];
+
+        //Vertical I Shape
+        if((currentShape[3] == currentShape[2] + columnsNbr) && ((currentShape[2] == currentShape[1] + columnsNbr)) && (currentShape[1] == currentShape[0] + columnsNbr))
+            moveIndexes = [
+                currentShape[0],
+                currentShape[0] + 1,
+                currentShape[0] + 2,
+                currentShape[0] + 3,
+            ];
+
+        //O Shape
+        if((currentShape[0] == currentShape[1] - 1) && ((currentShape[0] == currentShape[2] - columnsNbr)) && (currentShape[1] == currentShape[3] - columnsNbr))
+            validMove = false;
+
+        //L Shape to top
+        if((currentShape[0] == currentShape[1] - columnsNbr) && ((currentShape[1] == currentShape[2] - columnsNbr)) && (currentShape[2] == currentShape[3] - 1))
+            moveIndexes = [
+                currentShape[0],
+                currentShape[0] + 1,
+                currentShape[0] + 2,
+                currentShape[0] + columnsNbr,
+            ];
+
+        //L Shape to right
+        if((currentShape[0] == currentShape[1] - 1) && ((currentShape[1] == currentShape[2] - 1)) && (currentShape[0] == currentShape[3] - columnsNbr))
+            moveIndexes = [
+                currentShape[0] + 1,
+                currentShape[0] + 2,
+                currentShape[0] + columnsNbr + 2,
+                currentShape[0] + columnsNbr*2 + 2,
+            ];
+
+        //L Shape to bottom
+        if((currentShape[0] == currentShape[1] - 1) && ((currentShape[1] == currentShape[2] - columnsNbr)) && (currentShape[2] == currentShape[3] - columnsNbr))
+            moveIndexes = [
+                currentShape[1],
+                currentShape[1] - 2 + columnsNbr,
+                currentShape[1] - 1 + columnsNbr,
+                currentShape[1] + columnsNbr,
+            ];
+
+        //L Shape to left
+        if((currentShape[0] == currentShape[3] - columnsNbr) && ((currentShape[1] == currentShape[2] - 1)) && (currentShape[2] == currentShape[3] - 1))
+            moveIndexes = [
+                currentShape[1] - columnsNbr,
+                currentShape[1],
+                currentShape[1] + columnsNbr,
+                currentShape[1] + columnsNbr + 1,
+            ];
+
+    }
+
+    if(moveIndexes != null) {
+        moveIndexes.forEach(index => {
+            if(blocks[index] == null) validMove = false;
+            else if(blocks[index].classList.contains('stopped')) validMove = false;
+        });
+    }
+
+    if(validMove && moveIndexes != null) {
+
+        //Rotate Shape
+        for(let i = 0; i < currentShape.length; i++) {
+
+            blocks[currentShape[i]].classList = '';
+            currentShape[i] = moveIndexes[i];
+
+        }
+
+        drawShape();
+
+    }
+
+}
+
 //Check if shape reach bottom
 
 function checkCurrentShape() {
@@ -240,7 +349,7 @@ function blockCurrentShape() {
 
 function checkValidRows() {
 
-    let index = 0;
+    let index = columnsNbr * rowsNbr - 1;
     
     blocks.forEach(block => {
         
@@ -263,7 +372,7 @@ function checkValidRows() {
 
         }
         
-        index++;
+        index--;
     });
 
 }
