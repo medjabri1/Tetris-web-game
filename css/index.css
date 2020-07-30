@@ -114,5 +114,8 @@ html, body {
 .container .grid div.orange {
   background-color: #ff5100;
 }
+.container .grid div.black {
+  background-color: #000;
+}
 
 /*# sourceMappingURL=index.css.map */

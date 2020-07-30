@@ -7,14 +7,15 @@ const currentScore = 0;
 let isPlaying = false;
 let isGameOver = false;
 let blocks = [];
+let center = columnsNbr / 2 - 1;
 
-const I_SHAPE = [0, 1, 2, 3];
-const J_SHAPE = [0, columnsNbr, columnsNbr+1, columnsNbr+2];
-const L_SHAPE = [2, columnsNbr, columnsNbr+1, columnsNbr+2];
-const O_SHAPE = [0, 1, columnsNbr, columnsNbr+1];
-const S_SHAPE = [1, 2, columnsNbr, columnsNbr+1];
-const T_SHAPE = [1, columnsNbr, columnsNbr+1, columnsNbr+2]
-const Z_SHAPE = [0, 1, columnsNbr+1, columnsNbr+2];
+const I_SHAPE = [0 + center, 1 + center, 2 + center, 3 + center];
+const J_SHAPE = [0 + center, columnsNbr + center, columnsNbr+1 + center, columnsNbr+2 + center];
+const L_SHAPE = [2 + center, columnsNbr + center, columnsNbr+1 + center, columnsNbr+2 + center];
+const O_SHAPE = [0 + center, 1 + center, columnsNbr + center, columnsNbr+1 + center];
+const S_SHAPE = [1 + center, 2 + center, columnsNbr + center, columnsNbr+1 + center];
+const T_SHAPE = [1 + center, columnsNbr + center, columnsNbr+1 + center, columnsNbr+2 + center]
+const Z_SHAPE = [0 + center, 1 + center, columnsNbr+1 + center, columnsNbr+2 + center];
 
 const SHAPES = [I_SHAPE, J_SHAPE, L_SHAPE, O_SHAPE, S_SHAPE, T_SHAPE, Z_SHAPE];
 
@@ -46,14 +47,12 @@ function create() {
 
 function update() {
 
-    if(isPlaying) {
-
-        checkCurrentShape();
+    if(isPlaying && !isGameOver) {
 
         if(currentShape == null) {
 
-            currentShape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
-            drawShape(currentShape);
+            currentShape = SHAPES[Math.floor(Math.random() * SHAPES.length)].slice();
+            drawShape();
 
         } else {
 
@@ -67,8 +66,8 @@ function update() {
 
 //HELPER FUNCTIONS
 
-function startGame(modal) {
-    modal.classList.remove('active');
+function startGame() {
+    document.querySelector('.pop-up').classList.remove('active');
     isPlaying = true;
 }
 
@@ -76,15 +75,23 @@ function startGame(modal) {
 
 function control(e) {
 
+    if(e.keyCode == 13) {
+        //Enter key
+        startGame();
+    }
+
     if(e.keyCode == 37) {
+        //Left key
         moveDirection(-1);
     }
     
     if(e.keyCode == 39) {
+        //Right key
         moveDirection(1);
     }
     
     if(e.keyCode == 40) {
+        //Bottom key
         moveDown();
     }
 }
@@ -93,46 +100,54 @@ function control(e) {
 
 function moveDirection(direction) {
 
-    if(currentShape == null) return;
+    let validMove = true;
 
-    if(direction == -1) {
+    if(currentShape == null) validMove = false;
+
+    if(direction == -1 && validMove) {
         currentShape.forEach(element => {
-            let center = columnsNbr/2 + 2
-            if((element - center) % columnsNbr == 0) return;
+            if((element) % columnsNbr == 0) validMove = false;
+            if(blocks[element] != null) {
+                if(blocks[element - 1].classList.contains('stopped')) validMove = false;
+            }
+        });
+    }
+    
+    if(direction == 1 && validMove) {
+        currentShape.forEach(element => {
+            if((element + 1) % columnsNbr == 0) validMove = false;
+            if(blocks[element + 1] != null) {
+                if(blocks[element + 1].classList.contains('stopped')) validMove = false;
+            }
         });
     }
 
-    if(direction == 1) {
-        currentShape.forEach(element => {
-            if(element % columnsNbr == 0) return;
-        });
+    if(validMove) {
+
+        for(let i = 0; i < currentShape.length; i++) {
+    
+            blocks[currentShape[i]].classList = "";
+    
+            currentShape[i] += direction;
+        }
+    
+        drawShape();
+
     }
-
-    for(let i = 0; i < currentShape.length; i++) {
-
-        let center = columnsNbr / 2 - 2;
-        blocks[currentShape[i] + center].classList = "";
-
-        currentShape[i] += direction;
-    }
-
-    drawShape(currentShape);
 
 }
 
 //Draw shape in grid
 
-function drawShape(shape) {
+function drawShape() {
 
     let colors = ['red', 'blue', 'orange', 'green'];
     let randomColor = colors[Math.floor(Math.random() * colors.length)];
     currentColor = currentColor != null ? currentColor : randomColor;
 
-    let center = columnsNbr / 2 - 2;
-
-    shape.forEach(element => {
-        blocks[element + center].classList.add('currentShape');    
-        blocks[element + center].classList.add(currentColor);    
+    currentShape.forEach(element => {
+        blocks[element].classList.add('currentShape');    
+        blocks[element].classList.add(currentColor);    
     });
 }
 
@@ -140,15 +155,26 @@ function drawShape(shape) {
 
 function moveDown() {
 
-    for(let i = 0; i < currentShape.length; i++) {
+    if(!checkCurrentShape()) {
 
-        let center = columnsNbr / 2 - 2;
-        blocks[currentShape[i] + center].classList = "";
+        blockCurrentShape();
 
-        currentShape[i] += columnsNbr;
+    } else {
+
+        blocks.forEach(block => {
+            if(block.classList.contains('currentShape')) {
+                block.classList = '';
+            }
+        });
+    
+        for(let i = 0; i < currentShape.length; i++) {
+            currentShape[i] += columnsNbr;
+        }
+    
+        drawShape();
+
     }
 
-    drawShape(currentShape);
     
 }
 
@@ -156,45 +182,42 @@ function moveDown() {
 
 function checkCurrentShape() {
 
-    let stopped = false;
-
     if(currentShape == null) {
-        blockCurrentShape;
-        return;
+        return false;
     }
 
     for(let i = 0; i < currentShape.length; i++) {
 
         let element = currentShape[i];
 
-        if((element + columnsNbr) > blocks.length) {
-            stopped = true;
-            break;
+        if((element + columnsNbr) > columnsNbr * rowsNbr) {
+            return false;
         }
-
+        
         if(blocks[element + columnsNbr] != null) {
             if(blocks[element + columnsNbr].classList.contains('stopped')) {
-                stopped = true;
-                break;
+                return false;
             }
         }
 
     }
 
-    if(stopped == true) blockCurrentShape();
-
+    return true;
 }
 
 //Block current Shape
 
 function blockCurrentShape() {
 
-    currentShape.forEach(element => {
-        blocks[element].classList.remove('currentShape')
-        blocks[element].classList.add('stopped')
+    blocks.forEach(block => {
+        if(block.classList.contains('currentShape')) {
+            block.classList.remove('currentShape');
+            block.classList.add('stopped');
+        }
     });
 
     currentShape = null;
     currentColor = null;
+
 
 }
