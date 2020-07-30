@@ -276,6 +276,114 @@ function rotateShape() {
                 currentShape[1] + columnsNbr + 1,
             ];
 
+        //J Shape to top
+        if((currentShape[0] == currentShape[1] - columnsNbr) && ((currentShape[1] == currentShape[3] - columnsNbr)) && (currentShape[2] == currentShape[3] - 1)) 
+            moveIndexes = [
+                currentShape[0] - 2,
+                currentShape[0] - 1,
+                currentShape[0],
+                currentShape[0] + columnsNbr,
+            ];
+
+        //J Shape to left
+        if((currentShape[0] == currentShape[1] - 1) && ((currentShape[1] == currentShape[2] - 1)) && (currentShape[2] == currentShape[3] - columnsNbr)) 
+            moveIndexes = [
+                currentShape[0],
+                currentShape[0] + 1,
+                currentShape[0] + columnsNbr,
+                currentShape[0] + columnsNbr*2,
+            ];
+
+        //J Shape to bottom
+        if((currentShape[0] == currentShape[1] - 1) && ((currentShape[0] == currentShape[2] - columnsNbr)) && (currentShape[2] == currentShape[3] - columnsNbr)) 
+            moveIndexes = [
+                currentShape[0] + columnsNbr,
+                currentShape[0] + columnsNbr*2,
+                currentShape[0] + columnsNbr*2 + 1,
+                currentShape[0] + columnsNbr*2 + 2,
+            ];
+
+        //J Shape to right
+        if((currentShape[0] == currentShape[1] - columnsNbr) && ((currentShape[1] == currentShape[2] - 1)) && (currentShape[2] == currentShape[3] - 1)) 
+            moveIndexes = [
+                currentShape[0] - columnsNbr + 2,
+                currentShape[0] + 2,
+                currentShape[0] + columnsNbr + 1,
+                currentShape[0] + columnsNbr + 2,
+            ];
+
+        //T Shape to top
+        if((currentShape[0] == currentShape[2] - columnsNbr) && ((currentShape[1] == currentShape[2] - 1)) && (currentShape[2] == currentShape[3] - 1)) 
+            moveIndexes = [
+                currentShape[0] - columnsNbr + 1,
+                currentShape[0],
+                currentShape[0] + 1,
+                currentShape[0] + columnsNbr + 1,
+            ];
+
+        //T Shape to left
+        if((currentShape[0] == currentShape[2] - columnsNbr) && ((currentShape[1] == currentShape[2] - 1)) && (currentShape[2] == currentShape[3] - columnsNbr)) 
+            moveIndexes = [
+                currentShape[0] - 2,
+                currentShape[0] - 1,
+                currentShape[0],
+                currentShape[0] + columnsNbr - 1,
+            ];
+
+        //T Shape to bottom
+        if((currentShape[0] == currentShape[1] - 1) && ((currentShape[1] == currentShape[2] - 1)) && (currentShape[1] == currentShape[3] - columnsNbr)) 
+            moveIndexes = [
+                currentShape[0],
+                currentShape[0] + columnsNbr,
+                currentShape[0] + columnsNbr + 1,
+                currentShape[0] + columnsNbr*2,
+            ];
+
+        //T Shape to right
+        if((currentShape[0] == currentShape[1] - columnsNbr) && ((currentShape[1] == currentShape[2] - 1)) && (currentShape[1] == currentShape[3] - columnsNbr)) 
+            moveIndexes = [
+                currentShape[0] + columnsNbr + 1,
+                currentShape[0] + columnsNbr*2,
+                currentShape[0] + columnsNbr*2 + 1,
+                currentShape[0] + columnsNbr*2 + 2,
+            ];
+
+        //S Shape to right
+        if((currentShape[0] == currentShape[3] - columnsNbr) && ((currentShape[0] == currentShape[1] - 1)) && (currentShape[2] == currentShape[3] - 1)) 
+            moveIndexes = [
+                currentShape[0] - columnsNbr - 1,
+                currentShape[0] - 1,
+                currentShape[0],
+                currentShape[0] + columnsNbr,
+            ];
+
+        //S Shape to top
+        if((currentShape[0] == currentShape[1] - columnsNbr) && ((currentShape[1] == currentShape[2] - 1)) && (currentShape[2] == currentShape[3] - columnsNbr)) 
+            moveIndexes = [
+                currentShape[0] + columnsNbr + 1,
+                currentShape[0] + columnsNbr + 2,
+                currentShape[0] + columnsNbr*2,
+                currentShape[0] + columnsNbr*2 + 1,
+            ];
+
+        //Z Shape to left
+        if((currentShape[0] == currentShape[1] - 1) && ((currentShape[1] == currentShape[2] - columnsNbr)) && (currentShape[2] == currentShape[3] - 1)) 
+            moveIndexes = [
+                currentShape[0] - columnsNbr + 2,
+                currentShape[0] + 1,
+                currentShape[0] + 2,
+                currentShape[0] + columnsNbr + 1,
+            ];
+
+        //Z Shape to bottom
+        if((currentShape[0] == currentShape[2] - columnsNbr) && ((currentShape[1] == currentShape[2] - 1)) && (currentShape[1] == currentShape[3] - columnsNbr)) 
+            moveIndexes = [
+                currentShape[0] + columnsNbr - 2,
+                currentShape[0] + columnsNbr - 1,
+                currentShape[0] + columnsNbr*2 - 1,
+                currentShape[0] + columnsNbr*2,
+            ];
+
     }
 
     if(moveIndexes != null) {
@@ -283,6 +391,16 @@ function rotateShape() {
             if(blocks[index] == null) validMove = false;
             else if(blocks[index].classList.contains('stopped')) validMove = false;
         });
+
+        for(let i = 0; i < moveIndexes.length; i++) {
+
+            let distance = (moveIndexes[i] % columnsNbr - moveIndexes[0] % columnsNbr);
+            distance = distance >= 0 ? distance : -distance;
+
+            if(distance > moveIndexes.length) validMove = false;
+
+        }
+
     }
 
     if(validMove && moveIndexes != null) {
@@ -365,7 +483,12 @@ function checkValidRows() {
                 
                 currentScore += columnsNbr * speed * 10;
                 score.textContent = currentScore + ' pts';
-                speed += 0.2;
+
+                speed += 0.1;
+                clearInterval(gameIntervalTimer)
+                gameIntervalTimer = setInterval(update, 1000 / speed);
+
+                isPlaying = false;
                 clearRow(index);
 
             }
@@ -398,6 +521,8 @@ function clearRow(index) {
 
         cpt--;
     }
+
+    isPlaying = true;
 
 }
 
