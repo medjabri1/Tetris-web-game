@@ -548,6 +548,24 @@ function checkForLost() {
         clearInterval(gameIntervalTimer);
         speed = 1;
 
+        //LocalStorage
+        let currentHighScore = localStorage.getItem('highScore');
+
+        if(currentHighScore != null) {
+            if(currentScore > currentHighScore) {
+                //New HighScore
+                localStorage.setItem('highScore', currentScore);
+                score.classList.add('highScore');
+                score.textContent = 'New HighScore : '+ currentScore;
+            }
+        } else {
+            if(currentScore > 0) {
+                localStorage.setItem('highScore', currentScore);
+                score.classList.add('highScore');
+                score.textContent = 'New HighScore : '+ currentScore;
+            }
+        }
+
     }
 
 }
