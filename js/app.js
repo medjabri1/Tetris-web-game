@@ -243,37 +243,37 @@ function rotateShape() {
         //L Shape to top
         if((currentShape[0] == currentShape[1] - columnsNbr) && ((currentShape[1] == currentShape[2] - columnsNbr)) && (currentShape[2] == currentShape[3] - 1))
             moveIndexes = [
-                currentShape[0],
-                currentShape[0] + 1,
-                currentShape[0] + 2,
-                currentShape[0] + columnsNbr,
+                currentShape[0] + columnsNbr + 2,
+                currentShape[0] + columnsNbr*2,
+                currentShape[0] + columnsNbr*2 + 1,
+                currentShape[0] + columnsNbr*2 + 2,
             ];
 
         //L Shape to right
         if((currentShape[0] == currentShape[1] - 1) && ((currentShape[1] == currentShape[2] - 1)) && (currentShape[0] == currentShape[3] - columnsNbr))
             moveIndexes = [
-                currentShape[0] + 1,
-                currentShape[0] + 2,
-                currentShape[0] + columnsNbr + 2,
-                currentShape[0] + columnsNbr*2 + 2,
+                currentShape[0],
+                currentShape[0] + columnsNbr,
+                currentShape[0] + columnsNbr*2,
+                currentShape[0] + columnsNbr*2 + 1,
             ];
 
         //L Shape to bottom
         if((currentShape[0] == currentShape[1] - 1) && ((currentShape[1] == currentShape[2] - columnsNbr)) && (currentShape[2] == currentShape[3] - columnsNbr))
             moveIndexes = [
-                currentShape[1],
-                currentShape[1] - 2 + columnsNbr,
-                currentShape[1] - 1 + columnsNbr,
-                currentShape[1] + columnsNbr,
+                currentShape[0] - 1,
+                currentShape[0],
+                currentShape[0] + 1,
+                currentShape[0] + columnsNbr - 1,
             ];
 
         //L Shape to left
         if((currentShape[0] == currentShape[3] - columnsNbr) && ((currentShape[1] == currentShape[2] - 1)) && (currentShape[2] == currentShape[3] - 1))
             moveIndexes = [
-                currentShape[1] - columnsNbr,
-                currentShape[1],
-                currentShape[1] + columnsNbr,
-                currentShape[1] + columnsNbr + 1,
+                currentShape[0] - columnsNbr - 1,
+                currentShape[0] - columnsNbr,
+                currentShape[0],
+                currentShape[0] + columnsNbr,
             ];
 
         //J Shape to top
