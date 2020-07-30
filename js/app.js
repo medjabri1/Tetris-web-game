@@ -3,7 +3,7 @@ const score = document.querySelector('.score');
 const grid = document.querySelector('.grid');
 const rowsNbr = 20;
 const columnsNbr = 10;
-const currentScore = 0;
+let currentScore = 0;
 let isPlaying = false;
 let isGameOver = false;
 let blocks = [];
@@ -19,8 +19,8 @@ const Z_SHAPE = [0 + center, 1 + center, columnsNbr+1 + center, columnsNbr+2 + c
 
 const SHAPES = [I_SHAPE, J_SHAPE, L_SHAPE, O_SHAPE, S_SHAPE, T_SHAPE, Z_SHAPE];
 
-let speed = 2;
-let gameIntervalTimer = setInterval(update, 1000 / speed);
+let speed = 1;
+let gameIntervalTimer;
 let currentShape = null;
 let currentColor = null;
 
@@ -30,6 +30,8 @@ document.addEventListener('keydown', control);
 //MAIN FUNCTIONS
 
 function create() {
+
+    blocks = [];
 
     grid.querySelectorAll('div').forEach(div => {
         grid.removeChild(div);
@@ -47,7 +49,11 @@ function create() {
 
 function update() {
 
+    checkForLost();
+
     if(isPlaying && !isGameOver) {
+
+        checkValidRows();
 
         if(currentShape == null) {
 
@@ -69,6 +75,14 @@ function update() {
 function startGame() {
     document.querySelector('.pop-up').classList.remove('active');
     isPlaying = true;
+    isGameOver = false;
+    title.classList.remove('lost');
+    title.textContent = 'Enjoy your time';
+    currentScore = 0;
+    score.textContent = '0 pts';
+    gameIntervalTimer = setInterval(update, 1000 / speed);
+    speed = 1;
+    create();
 }
 
 //Key control
@@ -219,5 +233,87 @@ function blockCurrentShape() {
     currentShape = null;
     currentColor = null;
 
+
+}
+
+//Check valid rows 
+
+function checkValidRows() {
+
+    let index = 0;
+    
+    blocks.forEach(block => {
+        
+        if(index % columnsNbr == 0) {
+            
+            let validRow = true;
+
+            for(let i = index; i < index + columnsNbr; i++) {
+                if(!blocks[i].classList.contains('stopped')) validRow = false;
+            }
+            
+            if(validRow) {
+                
+                currentScore += columnsNbr * speed * 10;
+                score.textContent = currentScore + ' pts';
+                speed += 0.2;
+                clearRow(index);
+
+            }
+
+        }
+        
+        index++;
+    });
+
+}
+
+//Clear one row
+
+function clearRow(index) {
+
+    for(let i = index; i < index + columnsNbr; i++) {
+        blocks[i].classList = "";
+    }
+
+    let cpt = index - 1;
+
+    while(cpt >= 0) {
+
+        if(blocks[cpt].classList.contains('stopped')) {
+
+            blocks[cpt + columnsNbr].classList = blocks[cpt].classList;
+            blocks[cpt].classList = "";
+
+        }
+
+        cpt--;
+    }
+
+}
+
+//Check for lost 
+
+function checkForLost() {
+
+    let lost = false;
+
+    for(let i = 0; i < columnsNbr; i++) {
+
+        if(blocks[i].classList.contains('stopped')) {
+            lost = true;
+        }
+
+    }
+
+    if(lost) {
+
+        isGameOver = true;
+        title.textContent = 'You Lost, press enter to start again';
+        title.classList.add('lost');
+        clearInterval(gameIntervalTimer);
+        speed = 1;
+
+    }
 
 }
