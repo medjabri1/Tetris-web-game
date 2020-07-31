@@ -73,6 +73,7 @@ html, body {
   letter-spacing: 1px;
   word-spacing: 4px;
   text-transform: uppercase;
+  text-align: center;
 }
 .container .title.lost {
   color: #eb2525;
