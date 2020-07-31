@@ -76,12 +76,13 @@ function startGame() {
     document.querySelector('.pop-up').classList.remove('active');
     isPlaying = true;
     isGameOver = false;
+    title.removeEventListener('click', startGame);
     title.classList.remove('lost');
     title.textContent = 'Enjoy your time';
     currentScore = 0;
     score.textContent = '0 pts';
-    gameIntervalTimer = setInterval(update, 1000 / speed);
     speed = 1;
+    gameIntervalTimer = setInterval(update, 1000 / speed);
     create();
 }
 
@@ -543,8 +544,9 @@ function checkForLost() {
     if(lost) {
 
         isGameOver = true;
-        title.textContent = 'You Lost, press enter to start again';
+        title.textContent = 'You Lost, press enter or click here';
         title.classList.add('lost');
+        title.addEventListener('click', startGame);
         clearInterval(gameIntervalTimer);
         speed = 1;
 
